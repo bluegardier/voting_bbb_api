@@ -1,55 +1,48 @@
+from fastapi import APIRouter, HTTPException, status
 from app.app_utils.utils import return_request_metadata
-from fastapi import APIRouter
 from app.app_utils.queue_utils import send_to_queue
 from schemas.voting_schema import VoteRecord
+from src.utils.logger import default_logger
 
 router = APIRouter(prefix="/voting")
 
-@router.post("/arthur")
-async def register_arthur():
-    request_id, timestamp = return_request_metadata()
-    vote = VoteRecord(
-        request_id=request_id,
-        timestamp=timestamp,
-        arthur_aguiar=1,
-        davi_brito=0,
-        yagami_light=0
-    )
-    send_to_queue(vote.model_dump())
-    return {
-        "message": "Voto Registrado para Arthur",
-        "status_code": 200
-        }
 
-@router.post("/davi")
+async def register_vote(candidate: str):
+    request_id, timestamp = return_request_metadata()
+
+    vote = VoteRecord(
+        request_id=request_id,
+        timestamp=timestamp,
+        arthur_aguiar=1 if candidate == "arthur" else 0,
+        davi_brito=1 if candidate == "davi" else 0,
+        yagami_light=1 if candidate == "yagami" else 0,
+    )
+
+    try:
+        await send_to_queue(vote.model_dump())
+    except Exception as e:
+        default_logger.error(f"Error sending vote to {candidate}: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unable to register vote for {candidate} at this time."
+        )
+
+    return {
+        "message": f"Voto Registrado para {candidate.capitalize()}",
+        "status_code": status.HTTP_200_OK,
+        "request_id": request_id,
+        "timestamp": timestamp
+    }
+
+
+@router.post("/arthur", status_code=status.HTTP_200_OK)
+async def register_arthur():
+    return await register_vote("arthur")
+
+@router.post("/davi", status_code=status.HTTP_200_OK)
 async def register_davi():
-    request_id, timestamp = return_request_metadata()
-    vote = VoteRecord(
-        request_id=request_id,
-        timestamp=timestamp,
-        arthur_aguiar=0,
-        davi_brito=1,
-        yagami_light=0
-    )
-    send_to_queue(vote.model_dump())
-    return {
-        "message": "Voto Registrado para Davi",
-        "status_code": 200
-        }
-    
-@router.post("/yagami")
+    return await register_vote("davi")
+
+@router.post("/yagami", status_code=status.HTTP_200_OK)
 async def register_yagami():
-    request_id, timestamp = return_request_metadata()
-    vote = VoteRecord(
-        request_id=request_id,
-        timestamp=timestamp,
-        arthur_aguiar=0,
-        davi_brito=0,
-        yagami_light=1
-    )
-    send_to_queue(vote.model_dump())
-    return {
-        "message": "Voto Registrado para Yagami",
-        "status_code": 200
-        }
-    
+    return await register_vote("yagami")
