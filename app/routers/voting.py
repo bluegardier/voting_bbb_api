@@ -1,5 +1,6 @@
 from app.app_utils.utils import return_request_metadata
 from fastapi import APIRouter
+from app.app_utils.queue_utils import send_to_queue
 from schemas.voting_schema import VoteRecord
 
 router = APIRouter(prefix="/voting")
@@ -14,7 +15,7 @@ async def register_arthur():
         davi_brito=0,
         yagami_light=0
     )
-    # send_to_queue(vote.dict())
+    send_to_queue(vote.model_dump())
     return {
         "message": "Voto Registrado para Arthur",
         "status_code": 200
@@ -30,7 +31,7 @@ async def register_davi():
         davi_brito=1,
         yagami_light=0
     )
-    # send_to_queue(vote.dict())
+    send_to_queue(vote.model_dump())
     return {
         "message": "Voto Registrado para Davi",
         "status_code": 200
@@ -46,7 +47,7 @@ async def register_yagami():
         davi_brito=0,
         yagami_light=1
     )
-    # send_to_queue(vote.dict())
+    send_to_queue(vote.model_dump())
     return {
         "message": "Voto Registrado para Yagami",
         "status_code": 200
