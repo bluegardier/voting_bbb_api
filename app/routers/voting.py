@@ -1,3 +1,4 @@
+import socket
 from fastapi import APIRouter, HTTPException, status
 from app.app_utils.utils import return_request_metadata
 from app.app_utils.queue_utils import send_to_queue
@@ -9,6 +10,7 @@ router = APIRouter(prefix="/voting")
 
 async def register_vote(candidate: str):
     request_id, timestamp = return_request_metadata()
+    hostname = socket.gethostname()
 
     vote = VoteRecord(
         request_id=request_id,
@@ -28,10 +30,11 @@ async def register_vote(candidate: str):
         )
 
     return {
-        "message": f"Voto Registrado para {candidate.capitalize()}",
+        "message": f"Vote successfully registered for {candidate.capitalize()}",
         "status_code": status.HTTP_200_OK,
         "request_id": request_id,
-        "timestamp": timestamp
+        "timestamp": timestamp.isoformat(),
+        "container_id": hostname
     }
 
 
