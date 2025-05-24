@@ -2,7 +2,7 @@ from app.app_utils.utils import return_request_metadata
 from fastapi import APIRouter
 from schemas.voting_schema import VoteRecord
 
-router = APIRouter(prefix="voting")
+router = APIRouter(prefix="/voting")
 
 @router.post("/arthur")
 async def register_arthur():
