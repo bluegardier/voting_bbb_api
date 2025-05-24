@@ -19,12 +19,12 @@ async def register_vote(candidate: str):
     )
 
     try:
-        await send_to_queue(vote.model_dump())
+        await send_to_queue(vote.model_dump_json())
     except Exception as e:
         default_logger.error(f"Error sending vote to {candidate}: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Unable to register vote for {candidate} at this time."
+            detail=f"Unable to register vote for {candidate} at this time. Error: {e}"
         )
 
     return {
