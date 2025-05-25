@@ -1,4 +1,4 @@
-.PHONY: build run execute
+.PHONY: build run execute down
 
 build:
 	docker build -t voting_api .
@@ -7,9 +7,9 @@ run:
 	docker run -p 8000:8000 voting_api
 
 compose:
-	docker-compose up -d --build --force-recreate
+	docker-compose up --build --force-recreate --scale voting_api=3 -d
 
-compose_down:
+down:
 	docker-compose down --volumes --remove-orphans
 
 
