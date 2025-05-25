@@ -3,12 +3,10 @@ from typing import Dict
 from aiokafka import AIOKafkaProducer
 import json
 
+
 class KafkaQueueService(QueueService):
-    def __init__(
-        self,
-        bootstrap_servers: str = "kafka:9092",
-        topic: str = "votes"):
-        
+    def __init__(self, bootstrap_servers: str = "kafka:9092", topic: str = "votes"):
+
         self.bootstrap_servers = bootstrap_servers
         self.topic = topic
         self.producer = None
@@ -17,7 +15,7 @@ class KafkaQueueService(QueueService):
         if not self.producer:
             self.producer = AIOKafkaProducer(
                 bootstrap_servers=self.bootstrap_servers,
-                value_serializer=lambda v: json.dumps(v).encode('utf-8')
+                value_serializer=lambda v: json.dumps(v).encode("utf-8"),
             )
             await self.producer.start()
         return self.producer

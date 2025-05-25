@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class VoteRecord(BaseModel):
     request_id: str
     timestamp: datetime

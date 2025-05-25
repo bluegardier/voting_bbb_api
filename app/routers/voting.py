@@ -26,7 +26,7 @@ async def register_vote(candidate: str):
         default_logger.error(f"Error sending vote to {candidate}: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Unable to register vote for {candidate} at this time. Error: {e}"
+            detail=f"Unable to register vote for {candidate} at this time. Error: {e}",
         )
 
     return {
@@ -34,7 +34,7 @@ async def register_vote(candidate: str):
         "status_code": status.HTTP_200_OK,
         "request_id": request_id,
         "timestamp": timestamp.isoformat(),
-        "container_id": hostname
+        "container_id": hostname,
     }
 
 
@@ -42,9 +42,11 @@ async def register_vote(candidate: str):
 async def register_arthur():
     return await register_vote("arthur")
 
+
 @router.post("/davi", status_code=status.HTTP_200_OK)
 async def register_davi():
     return await register_vote("davi")
+
 
 @router.post("/yagami", status_code=status.HTTP_200_OK)
 async def register_yagami():
