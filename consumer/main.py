@@ -20,7 +20,7 @@ def main():
             buffer.append(vote)
             default_logger.debug(f"Message received and added to buffer: {vote}")
 
-            if len(buffer) >= 10: # settings.buffer_size
+            if len(buffer) >= settings.buffer_size:
                 default_logger.info(f"Inserting {len(buffer)} votes into the database.")
                 for v in buffer:
                     try:
