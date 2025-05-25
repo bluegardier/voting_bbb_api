@@ -1,7 +1,7 @@
 import socket
 from fastapi import APIRouter, HTTPException, status
-from app.app_utils.utils import return_request_metadata
-from app.app_utils.queue_utils import send_to_queue
+from app_utils.utils import return_request_metadata
+from app_utils.queue_utils import send_to_queue
 from schemas.voting_schema import VoteRecord
 from src.utils.logger import default_logger
 

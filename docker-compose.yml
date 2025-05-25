@@ -48,8 +48,8 @@ services:
 
   voting_api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./app
+      dockerfile: dockerfile
     expose:
       - "8000"
     networks:

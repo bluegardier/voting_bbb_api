@@ -1,7 +1,6 @@
 from .base import QueueService
 from typing import Dict
 from aiokafka import AIOKafkaProducer
-import asyncio
 import json
 
 class KafkaQueueService(QueueService):
